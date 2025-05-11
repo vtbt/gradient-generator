@@ -4,30 +4,34 @@ import './App.css';
 const DEFAULT_COLOR = '#FF0000';
 
 function App() {
-  const [colors, setColors] = useState(['#FFD500', '#FF0040']);
+  const [colors, setColors] = useState([
+    '#FFD500',
+    '#FF0040',
+    DEFAULT_COLOR,
+    DEFAULT_COLOR,
+    DEFAULT_COLOR,
+  ]);
 
-  const colorStops = colors.join(', ');
+  const [numOfVisibleColors, setNumOfVisibleColors] = useState(2);
+
+  const visibleColors = colors.slice(0, numOfVisibleColors);
+  const colorStops = visibleColors.join(', ');
   const backgroundImage = `linear-gradient(${colorStops})`;
 
   const removeColor = () => {
-    if (colors.length <= 2) {
+    if (numOfVisibleColors <= 2) {
       window.alert('There is a minimum of 2 colors');
       return;
     }
-
-    const nextColors = [...colors];
-    nextColors.pop();
-    setColors(nextColors);
+    setNumOfVisibleColors(numOfVisibleColors - 1);
   };
 
   const addColor = () => {
-    if (colors.length >= 5) {
+    if (numOfVisibleColors >= 5) {
       window.alert('There is a maximum of 5 colors');
       return;
     }
-    const nextColors = [...colors];
-    nextColors.push(DEFAULT_COLOR);
-    setColors(nextColors);
+    setNumOfVisibleColors(numOfVisibleColors + 1);
   };
 
   const handleChangeColor = (
@@ -54,7 +58,7 @@ function App() {
       />
 
       <div className="colors">
-        {colors.map((color, index) => {
+        {visibleColors.map((color, index) => {
           const colorId = `color-${index}`;
           return (
             <div key={colorId} className="color-wrapper">
