@@ -1,65 +1,49 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import './App.css';
 
 const DEFAULT_COLOR = '#FF0000';
 
 function App() {
   const [colors, setColors] = useState(['#FFD500', '#FF0040']);
-  const [isDisabledRemove, setIsDisabledRemove] = useState(false);
-  const [isDisabledAdd, setIsDisabledAdd] = useState(false);
 
   const colorStops = colors.join(', ');
   const backgroundImage = `linear-gradient(${colorStops})`;
 
-  useEffect(() => {
-    if (colors.length === 5) {
-      setIsDisabledAdd(true);
-      return;
-    }
-    if (colors.length === 2) {
-      setIsDisabledRemove(true);
-      return;
-    }
-  }, [colors.length]);
-
-  const handleRemoveColor = () => {
-    if (colors.length === 2) {
+  const removeColor = () => {
+    if (colors.length <= 2) {
+      window.alert('There is a minimum of 2 colors');
       return;
     }
 
-    setIsDisabledAdd(false);
-    const newColors = [...colors];
-    newColors.pop();
-    setColors(newColors);
+    const nextColors = [...colors];
+    nextColors.pop();
+    setColors(nextColors);
   };
 
-  const handleAddColor = () => {
-    if (colors.length === 5) {
+  const addColor = () => {
+    if (colors.length >= 5) {
+      window.alert('There is a maximum of 5 colors');
       return;
     }
-
-    setIsDisabledRemove(false);
-    setColors([...colors, DEFAULT_COLOR]);
+    const nextColors = [...colors];
+    nextColors.push(DEFAULT_COLOR);
+    setColors(nextColors);
   };
 
   const handleChangeColor = (
     event: ChangeEvent<HTMLInputElement>,
     index: number
   ) => {
-    const newColors = [...colors];
-    newColors[index] = event.target.value;
-    setColors(newColors);
+    const nextColors = [...colors];
+    nextColors[index] = event.target.value;
+    setColors(nextColors);
   };
 
   return (
     <div className="wrapper">
       <div className="actions">
-        <button disabled={isDisabledRemove} onClick={handleRemoveColor}>
-          Remove color
-        </button>
-        <button disabled={isDisabledAdd} onClick={handleAddColor}>
-          Add color
-        </button>
+        <button onClick={removeColor}>Remove color</button>
+        <button onClick={addColor}>Add color</button>
       </div>
 
       <div
